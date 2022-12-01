@@ -1,7 +1,7 @@
 export const config ={
     client:'sqlite3',
     connection:{
-        filename: './db/ecommerce.sqlite'
+        filename: './dataBase/ecommerce.sqlite'
     },
     useNullAsDefault: true
 }

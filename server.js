@@ -1,25 +1,26 @@
 //Requires
-const express = require('express');
-const { Server: HttpServer} = require('http');
-const {Server: IOServer} = require('socket.io');
+import express from 'express';
 const app = express();
-const Messeges = require('./Contenedor/historialDeMensajes.js')
+
+import {HttpServer} from 'http';
+import { Server } from "socket.io";
+
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
+
+
 const routerProd = express.Router();
-const historial = new Messeges()
-const PORT = 8080;
 const myRoutes = routerProd.get('/', (req, res) => {
     res.render('index');
 });
 
 //Maria DB y SQLlite
+import { options } from './options/sqlite.js'
 import { options } from './options/mariaDB.js';
-import Contenedor from './controllers/Contenedor.js'
+import Contenedor from './controller/productos.js'
 const ProductController = new Contenedor(config);
 
 
-//Servidor socket.io (Entrega Seis)
-const httpServer = new HttpServer(app);
-const io = new IOServer(httpServer);
 
 //Entregas anteriores
 app.use(express.json());
@@ -97,6 +98,8 @@ io.on('connection', (socket) => {
     } );
 });
 
+
+const PORT = 8080;
 //Levantando el servidor
 const server = app.listen(PORT, () => {
     console.log(`Server corriendo en el puerto ${PORT}`)
