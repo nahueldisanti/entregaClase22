@@ -5,5 +5,6 @@ export const options = {
         user:'root',
         password:'',
         database:'ecommerce',
+        
     }
 }

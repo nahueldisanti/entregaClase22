@@ -5,40 +5,46 @@ class Contenedor {
         this.knex = knexLib(config);
     }
 
-    createTable() {
-        return this.knex.schema.dropTableIfExists('productos')
-        .finally(() => {
-            return this.knex.schema.createTable('productos', table =>{
+    async createTable() {
+        try {
+            await this.knex.schema.createTable('productos', table => {
                 table.increments('id_articulo').primary();
                 table.string('title', 50).notNullable();
-                table.float('precio', 9);
+                table.float('price', 9);
                 table.string('thumbnail', 50);
             })
-        })
+            console.log('La tabla "productos" se ha creado')
+                
+        }catch(err) { 
+            console.log(err); throw err 
+        }
+        finally {
+            this.knex.destroy();
+        }
     }
 
-    save(product) {
-        return this.knex('productos').insert(product);
+    async save(product) {
+        return await this.knex('productos').insert(product);
     }
     
-    getAll() {
-        return this.knex('productos').select('*');
+    async getAll() {
+        return await this.knex('productos').select('*');
     }
     
-    getById(id) {
-        return this.knex('productos').select('*').where('id_articulo', id);
+    async getById(id) {
+        return await this.knex('productos').select('*').where('id_articulo', id);
     }
     
-    updateArticle(id, product) {
-        return this.knex('productos').where('id_articulo', id).update(product);
+    async updateArticle(id, product) {
+        return await this.knex('productos').where('id_articulo', id).update(product);
     }
     
-    deleteById(id) {
-        return this.knex('productos').where('id_articulo', id).del();
+    async deleteById(id) {
+        return await this.knex('productos').where('id_articulo', id).del();
     }
     
-    close() {
-        return this.knex.destroy();
+    async close() {
+        return await this.knex.destroy();
     }
 }
 

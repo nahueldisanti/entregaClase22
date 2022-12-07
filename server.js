@@ -2,11 +2,11 @@
 import express from 'express';
 const app = express();
 
-import {HttpServer} from 'http';
+import { createServer } from 'http';
 import { Server } from "socket.io";
 
-const httpServer = new HttpServer(app);
-const io = new IOServer(httpServer);
+const httpServer = new createServer(app);
+const io = new Server(httpServer);
 
 
 const routerProd = express.Router();
@@ -15,12 +15,14 @@ const myRoutes = routerProd.get('/', (req, res) => {
 });
 
 //Maria DB y SQLlite
-import { options } from './options/sqlite.js'
+import { config } from './options/sqlite.js'
 import { options } from './options/mariaDB.js';
 import Contenedor from './controller/productos.js'
-const ProductController = new Contenedor(config);
 
+const ProductoController = new Contenedor(options);
 
+import Chats from './controller/chat.js'
+const historial = new Chats(config);
 
 //Entregas anteriores
 app.use(express.json());

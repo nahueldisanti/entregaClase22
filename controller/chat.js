@@ -6,20 +6,26 @@ export default class Chats {
     }
 
     async createTable() {
-        return this.knex.schema.dropTableIfExists('chats')
-        .finally(()=>{
-            return this.knex.schema.createTable('chats', table => {
-                table.increments('id_chat').primary();
-                table.string('email');
-                table.string('textoMensaje');
-                table.string('date')
+        try {
+            await this.knex.schema.createTable("mensajes", table => {
+                table.increments('id_chat')
+                table.string('email')
+                table.string('textoMensaje')
+                table.timestamp('date')
             })
-        })
+            console.log('La tabla "mensajes" se ha creado')
+    
+        }catch(err) { 
+            console.log(err); throw err 
+        }
+        finally {
+            this.knex.destroy();
+        }
     }
 
     async getAllChats() {
         try {
-            return this.knex('chats').select('*');
+            return await this.knex('chats').select('*');
         } catch (error) {
             return []
         }
