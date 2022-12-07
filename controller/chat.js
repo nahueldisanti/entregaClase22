@@ -7,11 +7,14 @@ export default class Chats {
 
     async createTable() {
         try {
-            await this.knex.schema.createTable("mensajes", table => {
-                table.increments('id_chat')
-                table.string('email')
-                table.string('textoMensaje')
-                table.timestamp('date')
+            await this.knex.schema.dropTableIfExists('mensajes')
+            .then(function() {
+                return this.knex.schema.createTable('mensajes', table => {
+                    table.increments('id_chat')
+                    table.string('email')
+                    table.string('textoMensaje')
+                    table.timestamp('date')
+            })
             })
             console.log('La tabla "mensajes" se ha creado')
     

@@ -7,14 +7,16 @@ class Contenedor {
 
     async createTable() {
         try {
-            await this.knex.schema.createTable('productos', table => {
+            await this.knex.schema.dropTableIfExists('productos')
+            .then(async function() {
+            return await this.knex.schema.createTable('productos', table => {
                 table.increments('id_articulo').primary();
                 table.string('title', 50).notNullable();
                 table.float('price', 9);
                 table.string('thumbnail', 50);
             })
-            console.log('La tabla "productos" se ha creado')
-                
+            })
+            console.log('La tabla "productos" se ha creado');
         }catch(err) { 
             console.log(err); throw err 
         }
