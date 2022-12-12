@@ -15,14 +15,19 @@ const myRoutes = routerProd.get('/', (req, res) => {
 });
 
 //Maria DB y SQLlite
-import { config } from './options/sqlite.js'
-import { options } from './options/mariaDB.js';
-import Contenedor from './controller/productos.js'
+//import { config } from './options/sqlite.js'
+//import { options } from './options/mariaDB.js';
 
-const ProductoController = new Contenedor(options);
 
-import Chats from './controller/chat.js'
-const historial = new Chats(config);
+//import Contenedor from './controller/productos.js'
+//const ProductoController = new Contenedor(options);
+
+import productoController from './controller/productos.js'
+
+//import Chats from './controller/chat.js'
+//const historial = new Chats(config);
+
+import historial from './controller/chat.js'
 
 //Entregas anteriores
 app.use(express.json());
@@ -34,7 +39,9 @@ app.set('views','./public/views');
 
 const mensajes = [];
 
-ProductoController.createTable()
+//Inicializo la tabla de productos
+
+productoController.createTable()
     .then(()=>{
         console.log('Tabla de Productos creados');
 
@@ -58,7 +65,7 @@ ProductoController.createTable()
                 "id_articulo": 3
             },
         ]
-        return ProductoController.save(products)
+        return productoController.save(products)
     })
     .then(()=>{
         console.log('Productos insertados');
@@ -68,8 +75,23 @@ ProductoController.createTable()
         throw error ;
     })
 
+//Incializo la tabla Mensajes
 
-//IO
+historial.createTable()
+    .then(() => {
+        console.log("Tabla de mensajes creada");
+        const chats = [];
+        return historial.save(chats)
+    })
+    .then(() => {
+        console.log("Mensaje agregado");
+    })
+    .catch((error) => {
+        console.log(error)
+    });
+
+
+    //IO
 io.on('connection', (socket) => {
     console.log('Nuevo cliente conectado!');
 
@@ -82,7 +104,7 @@ io.on('connection', (socket) => {
     });
 
     //Traemos los productos
-    const items = contenedor.getAll();
+    const items = productoController.getAll();
     socket.emit('items', items);
     
     //Guardando productos

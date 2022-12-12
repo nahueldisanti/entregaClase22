@@ -1,8 +1,10 @@
-import knexLib from 'knex';
+import knex from 'knex';
+//const knex = require('knex')
+import { options } from '../options/mariaDB.js';
 
 class Contenedor {
     constructor(config) {
-        this.knex = knexLib(config);
+        this.knex = knex(config);
     }
 
     async createTable() {
@@ -49,6 +51,5 @@ class Contenedor {
         return await this.knex.destroy();
     }
 }
-
-
-export default Contenedor;
+const productoController = new Contenedor(options);
+export default productoController

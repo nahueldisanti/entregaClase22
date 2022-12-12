@@ -1,8 +1,10 @@
-import knexLib from 'knex'
+import Knex from 'knex'
+//const knex = require('knex')
+import { config } from '../options/sqlite.js'
 
-export default class Chats {
-    constructor(options) {
-        this.knex = knexLib(options)
+class Chats {
+    constructor(config) {
+        this.knex = Knex(config);
     }
 
     async createTable() {
@@ -21,14 +23,11 @@ export default class Chats {
         }catch(err) { 
             console.log(err); throw err 
         }
-        finally {
-            this.knex.destroy();
-        }
     }
 
     async getAllChats() {
         try {
-            return await this.knex('chats').select('*');
+            return await this.knex('mensajes').select('*');
         } catch (error) {
             return []
         }
@@ -36,10 +35,13 @@ export default class Chats {
 
     async save(newMessage) {
         try {
-            await this.knex('chats').insert(newMessage)
-            return await this.knex('chats').select('*')
+            await this.knex('mensajes').insert(newMessage)
+            return await this.knex('mensajes').select('*')
         } catch (error) {
             return(error)
         }
     }
 }
+
+const historial = new Chats (config);
+export default historial
