@@ -19,9 +19,6 @@ export default class Contenedor {
         }catch(err) { 
             console.log(err); throw err 
         }
-        finally {
-            this.knex.destroy();
-        }
     }
 
     async save(product) {
