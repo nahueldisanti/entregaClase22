@@ -15,19 +15,15 @@ const myRoutes = routerProd.get('/', (req, res) => {
 });
 
 //Maria DB y SQLlite
-//import { config } from './options/sqlite.js'
-//import { options } from './options/mariaDB.js';
+import { config } from './options/sqlite.js'
+import { options } from './options/mariaDB.js';
 
+import Contenedor from './controller/productos.js'
+const productoController = new Contenedor(options);
 
-//import Contenedor from './controller/productos.js'
-//const ProductoController = new Contenedor(options);
+import Chats from './controller/chat.js'
+const historial = new Chats(config);
 
-import productoController from './controller/productos.js'
-
-//import Chats from './controller/chat.js'
-//const historial = new Chats(config);
-
-import historial from './controller/chat.js'
 
 //Entregas anteriores
 app.use(express.json());

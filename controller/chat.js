@@ -1,24 +1,21 @@
-import Knex from 'knex'
+import knexLib from 'knex'
 //const knex = require('knex')
-import { config } from '../options/sqlite.js'
 
-class Chats {
+export default  class Chats {
     constructor(config) {
-        this.knex = Knex(config);
+        this.knex = knexLib(config);
     }
 
     async createTable() {
         try {
             await this.knex.schema.dropTableIfExists('mensajes')
-            .then(function() {
-                return this.knex.schema.createTable('mensajes', table => {
+            return this.knex.schema.createTable('mensajes', table => {
                     table.increments('id_chat')
                     table.string('email')
                     table.string('textoMensaje')
                     table.timestamp('date')
+                    console.log('tabla creada')
             })
-            })
-            console.log('La tabla "mensajes" se ha creado')
     
         }catch(err) { 
             console.log(err); throw err 
@@ -42,6 +39,3 @@ class Chats {
         }
     }
 }
-
-const historial = new Chats (config);
-export default historial

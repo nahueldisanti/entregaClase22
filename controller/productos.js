@@ -1,24 +1,21 @@
-import knex from 'knex';
+import knexLib from 'knex'
 //const knex = require('knex')
-import { options } from '../options/mariaDB.js';
 
-class Contenedor {
+export default class Contenedor {
     constructor(config) {
-        this.knex = knex(config);
+        this.knex = knexLib(config);
     }
 
     async createTable() {
         try {
             await this.knex.schema.dropTableIfExists('productos')
-            .then(async function() {
             return await this.knex.schema.createTable('productos', table => {
                 table.increments('id_articulo').primary();
                 table.string('title', 50).notNullable();
                 table.float('price', 9);
                 table.string('thumbnail', 50);
+                console.log('La tabla "productos" se ha creado');
             })
-            })
-            console.log('La tabla "productos" se ha creado');
         }catch(err) { 
             console.log(err); throw err 
         }
@@ -51,5 +48,4 @@ class Contenedor {
         return await this.knex.destroy();
     }
 }
-const productoController = new Contenedor(options);
-export default productoController
+
